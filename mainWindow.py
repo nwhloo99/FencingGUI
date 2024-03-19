@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import QFileDialog, QWidget, QPushButton, QLabel, QApplicat
 from pathlib import Path
 import sys
 
+from masking import maskVideo
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -62,10 +64,23 @@ class MainWindow(QMainWindow):
         if filename:
             path = Path(filename)
             self.filenameEdit.setText(str(path))
+            self.videoChosen = True
             
     def moveToNextStep(self):
         if self.videoChosen:
-            print("Chose")
+            path = Path(self.filenameEdit.text())
+            folder = path.parent
+            filename = path.name
+            print(folder)
+            print(filename)
+            try:
+                maskVideo(folder, filename)
+            except:
+                msg = QtWidgets.QMessageBox()
+                msg.setWindowTitle("Error occured")
+                msg.setText("Please try again")
+                msg.setIcon(QtWidgets.QMessageBox.Critical)
+                x = msg.exec_()
         else:
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle("Warning")
