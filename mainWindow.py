@@ -6,9 +6,9 @@ import sys
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.videoChosen = False
         self.setupUi()
-    
-    
+        
     def setupUi(self):
         self.setObjectName("MainWindow")
         self.resize(800, 600)
@@ -18,6 +18,10 @@ class MainWindow(QMainWindow):
         self.importVidButton = QPushButton(self.centralwidget)
         self.importVidButton.setObjectName("importVidButton")
         self.importVidButton.clicked.connect(self.selectVideoFile)
+        
+        self.nextStepButton = QPushButton(self.centralwidget)
+        self.nextStepButton.setObjectName("nextStepButton")
+        self.nextStepButton.clicked.connect(self.moveToNextStep)
         
         self.label = QLabel(self.centralwidget)
         self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
@@ -29,7 +33,8 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.label, 0, 0)
         self.layout.addWidget(QLabel('File:'), 1, 0)
         self.layout.addWidget(self.filenameEdit, 1, 1)
-        self.layout.addWidget(self.importVidButton, 1, 2)     
+        self.layout.addWidget(self.importVidButton, 1, 2)
+        self.layout.addWidget(self.nextStepButton, 2, 0)     
         
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
@@ -49,13 +54,25 @@ class MainWindow(QMainWindow):
         self.importVidButton.adjustSize()
         self.label.setText(_translate("MainWindow", "Choose which video to analyse"))
         self.label.adjustSize()
+        self.nextStepButton.setText(_translate("MainWindow", "Proceed"))
+        self.nextStepButton.adjustSize()
 
     def selectVideoFile(self):
         filename, _ = QFileDialog.getOpenFileName(self, "Select a File", "C:")
         if filename:
             path = Path(filename)
             self.filenameEdit.setText(str(path))
-        
+            
+    def moveToNextStep(self):
+        if self.videoChosen:
+            print("Chose")
+        else:
+            msg = QtWidgets.QMessageBox()
+            msg.setWindowTitle("Warning")
+            msg.setText("You have not chosen a video")
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            x = msg.exec_()
+            
 
 def window():
     app = QApplication(sys.argv)
