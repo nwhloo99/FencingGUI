@@ -88,12 +88,3 @@ class MainWindow(QMainWindow):
             msg.setIcon(QtWidgets.QMessageBox.Critical)
             x = msg.exec_()
             
-
-def window():
-    app = QApplication(sys.argv)
-    win = MainWindow()
-    
-    win.show()
-    sys.exit(app.exec_())
-    
-window()
