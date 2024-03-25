@@ -16,12 +16,14 @@ from mainAppUI import Ui_MainWindow
 from masking import maskVideo
 from ocr import performOcr
 from posetracking import run_alphapose
+from alphapose_processing import get_results
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         
         self.alphapose_process = None
+        self.alphapose_read_process = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         
@@ -52,6 +54,36 @@ class MainWindow(QMainWindow):
         self.ui.label_4.setText("Process finished.")
         self.ui.label_4.adjustSize()
         self.alphapose_process = None
+       
+    @pyqtSlot() 
+    def on_retrieve_alphaposedata_readReady(self):
+        cursor = self.ui.retrievePoseTrackingOutput.textCursor()
+        cursor.movePosition(QtGui.QTextCursor.End)
+        cursor.insertText(str(self.alphapose_read_process.readAll(), "utf-8"))
+        self.ui.retrievePoseTrackingOutput.ensureCursorVisible()
+    
+    @pyqtSlot()
+    def on_retrievePoseTrackingSendButton_clicked(self):
+        text = self.ui.retrievePoseTrackingCommandLine.text() + "\n"
+        cursor = self.ui.retrievePoseTrackingOutput.textCursor()
+        cursor.movePosition(QtGui.QTextCursor.End)
+        cursor.insertText(str(text))
+        self.ui.retrievePoseTrackingOutput.ensureCursorVisible()
+        self.alphapose_read_process.write(text.encode())
+        
+    def alphaposedata_process_handle_stdout(self):
+        data = self.alphapose_read_process.readAllStandardOutput()
+        stdout = bytes(data).decode("utf8")
+        cursor = self.ui.retrievePoseTrackingOutput.textCursor()
+        cursor.movePosition(QtGui.QTextCursor.End)
+        cursor.insertText(str(stdout))
+        
+    def alphaposedata_process_finished(self):
+        cursor = self.ui.retrievePoseTrackingOutput.textCursor()
+        cursor.movePosition(QtGui.QTextCursor.End)
+        cursor.insertText("Process finished.")
+        QApplication.processEvents()
+        self.alphapose_read_process = None
         
         
     ## Change QPushButton Checkable status when stackedWidget index changed
@@ -121,6 +153,25 @@ class MainWindow(QMainWindow):
             self.alphapose_process.finished.connect(self.alphapose_process_finished)
             self.alphapose_process.start(command)
             os.chdir("..")
+        else:
+            msg = QtWidgets.QMessageBox()
+            msg.setWindowTitle("Warning")
+            msg.setText("You have not chosen a video")
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            x = msg.exec_()
+            
+    @pyqtSlot()
+    def on_retrievePoseTrackingDataButton_clicked(self):
+        if self.videoChosen:
+            path = Path(self.ui.lineEdit_3.text())
+            folder = path.parent
+            self.alphapose_read_process = QProcess()
+            self.alphapose_read_process.setProcessChannelMode(QProcess.MergedChannels)
+            self.alphapose_read_process.readyRead.connect(self.on_retrieve_alphaposedata_readReady)
+            self.alphapose_read_process.readyReadStandardOutput.connect(self.alphaposedata_process_handle_stdout)
+            self.alphapose_read_process.finished.connect(self.alphaposedata_process_finished)
+            
+            self.alphapose_read_process.start("fencingguienv/Scripts/python.exe", ["./alphapose_processing.py", str(folder)])
         else:
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle("Warning")
