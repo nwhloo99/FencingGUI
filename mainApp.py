@@ -15,6 +15,7 @@ from contextlib import redirect_stdout
 from mainAppUI import Ui_MainWindow
 from masking import maskVideo
 from ocr import performOcr
+from posetracking import run_alphapose
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -45,6 +46,8 @@ class MainWindow(QMainWindow):
     ## Function for changing menu page     
     def on_alphapose_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(2)
+        self.videoChosen = False
+        self.ui.lineEdit_3.setText("")
     
     ## Function for changing menu page     
     def on_analysis_btn_toggled(self):
@@ -65,6 +68,27 @@ class MainWindow(QMainWindow):
             path = Path(filename)
             self.ui.lineEdit_2.setText(str(path))
             self.videoChosen = True
+            
+    @pyqtSlot()
+    def on_browse_file_btn_3_clicked(self):
+        filename, _ = QFileDialog.getOpenFileName(self, "Select a File", "C:")
+        if filename:
+            path = Path(filename)
+            self.ui.lineEdit_3.setText(str(path))
+            self.videoChosen = True
+    
+    @pyqtSlot()
+    def on_performPoseTrackingButton_clicked(self):
+        if self.videoChosen:
+            path = Path(self.ui.lineEdit_3.text())
+            folder = path.parent
+            run_alphapose(folder, path)
+        else:
+            msg = QtWidgets.QMessageBox()
+            msg.setWindowTitle("Warning")
+            msg.setText("You have not chosen a video")
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            x = msg.exec_()
     
     @pyqtSlot()
     def on_scoreboardDetection_btn_clicked(self):

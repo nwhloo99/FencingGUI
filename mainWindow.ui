@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="maskVideoPage">
      <widget class="QWidget" name="importVideoBar_3" native="true">
@@ -488,7 +488,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="performPoseTrackingButton_2">
+         <widget class="QPushButton" name="performPoseTrackingButton">
           <property name="styleSheet">
            <string notr="true">background-color: rgb(255, 255, 255);</string>
           </property>
@@ -553,24 +553,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTextEdit" name="textEdit_2">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">alternate-background-color: rgb(255, 255, 255);
-background-color: rgb(255, 255, 255);</string>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAsNeeded</enum>
-          </property>
-          <property name="sizeAdjustPolicy">
-           <enum>QAbstractScrollArea::AdjustToContents</enum>
-          </property>
-         </widget>
+         <widget class="QLineEdit" name="lineEdit_3"/>
         </item>
         <item>
          <widget class="QPushButton" name="browse_file_btn_3">
@@ -603,6 +586,19 @@ background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>Alphapose Processing</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>370</y>
+        <width>47</width>
+        <height>14</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
       </property>
      </widget>
     </widget>
