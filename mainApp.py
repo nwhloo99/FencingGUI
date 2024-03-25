@@ -14,7 +14,7 @@ from contextlib import redirect_stdout
 
 from mainAppUI import Ui_MainWindow
 from masking import maskVideo
-from scoreboardDetection import scoreboardDetection
+from ocr import performOcr
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -33,10 +33,14 @@ class MainWindow(QMainWindow):
     ## Function for changing menu page     
     def on_mask_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(0)
+        self.videoChosen = False
+        self.ui.lineEdit.setText("")
     
     ## Function for changing menu page     
     def on_ocr_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(1)
+        self.videoChosen = False
+        self.ui.lineEdit_2.setText("")
     
     ## Function for changing menu page     
     def on_alphapose_btn_toggled(self):
@@ -89,9 +93,9 @@ class MainWindow(QMainWindow):
                     except:
                         boxes.append(boxes[-1])
                         
-                # boxes_df = pd.DataFrame(boxes)
-                # boxes_df = boxes_df.astype('int')
-                # boxes_df.to_csv('boxes.csv', index=False, header=False)
+                boxes_df = pd.DataFrame(boxes)
+                boxes_df = boxes_df.astype('int')
+                boxes_df.to_csv('boxes.csv', index=False, header=False)
                 
                 os.chdir(mycwd)
             except:
@@ -107,9 +111,21 @@ class MainWindow(QMainWindow):
             msg.setIcon(QtWidgets.QMessageBox.Critical)
             x = msg.exec_()
             
-        self.videoChosen = False
-        self.ui.lineEdit_2.setText("")
-    
+    @pyqtSlot()
+    def on_performOCRButton_clicked(self):
+        if self.videoChosen:
+            path = Path(self.ui.lineEdit_2.text())
+            folder = path.parent
+            filename = path.name
+            performOcr(folder)
+        else:
+            msg = QtWidgets.QMessageBox()
+            msg.setWindowTitle("Warning")
+            msg.setText("You have not chosen a video")
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            x = msg.exec_()
+            
+            
     @pyqtSlot()
     def on_perform_masking_btn_clicked(self):
         if self.videoChosen:
