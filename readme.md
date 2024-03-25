@@ -4,4 +4,6 @@ The application helps in the analysis of fencing videos. Currently, it utilizes 
 ## Setting up
 
 1. pip install -r requirements.txt
-2. Import weights for scoreboard detection from https://drive.google.com/drive/folders/11mB6rqxopUEeYFy6dOK3Bu25u4GSc2xu?usp=sharing 
+2. Import weights for scoreboard detection from https://drive.google.com/drive/folders/11mB6rqxopUEeYFy6dOK3Bu25u4GSc2xu?usp=sharing
+3. Import AlphaPose folder from https://drive.google.com/drive/folders/1Y4fODsQtKPwCKQ1Ot1nXeZ7ECROnKFdM?usp=drive_link 
+4. Run "python ./AlphaPose/setup.py build develop"
