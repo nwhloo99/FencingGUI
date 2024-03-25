@@ -72,6 +72,8 @@ def performOcr(folder):
         global posList
         if event == cv2.EVENT_LBUTTONDOWN:
                 posList.append([x, y])
+                cv2.circle(res, (x,y), radius=10, color=(0,255,0), thickness=-1)
+                cv2.imshow('WindowName', res)
 
     pts2 = [[0,0], [0,360], [540,0], [540,360]]
 
@@ -146,6 +148,6 @@ def performOcr(folder):
         res.append([m[0] / 30, m[1]])
     result = list(zip(*res))
     results_df = pd.DataFrame(res)
-    results_df.to_csv('RobVsHkg/momentum_results.csv', index=False, header=False)
+    results_df.to_csv('./momentum_results.csv', index=False, header=False)
     
     os.chdir(mycwd)

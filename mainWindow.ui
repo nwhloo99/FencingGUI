@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>975</width>
-    <height>634</height>
+    <width>1104</width>
+    <height>771</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>160</x>
       <y>0</y>
-      <width>811</width>
-      <height>611</height>
+      <width>941</width>
+      <height>741</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -188,8 +188,8 @@
      <widget class="QWidget" name="OCRButtons" native="true">
       <property name="geometry">
        <rect>
-        <x>570</x>
-        <y>90</y>
+        <x>660</x>
+        <y>110</y>
         <width>185</width>
         <height>421</height>
        </rect>
@@ -203,22 +203,51 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>50</x>
+         <x>40</x>
          <y>20</y>
-         <width>85</width>
+         <width>121</width>
          <height>381</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
+         <spacer name="verticalSpacer_9">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>OCR</string>
+           <string>When the window opens, select the corners of the scoreboard by clicking. Choose from top left, bottom left, top right, bottom right</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <widget class="QPushButton" name="performOCRButton">
@@ -231,27 +260,17 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>OCR output detected retrieve data now</string>
+         <spacer name="verticalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-          <property name="scaledContents">
-           <bool>false</bool>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
           </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="retrieveOCRDataButton">
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(255, 255, 255);</string>
-          </property>
-          <property name="text">
-           <string>Retrieve data</string>
-          </property>
-         </widget>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -268,7 +287,7 @@
       <property name="styleSheet">
        <string notr="true">background-color: rgb(230, 230, 230);</string>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -673,7 +692,7 @@ background-color: rgb(255, 255, 255);</string>
       <x>0</x>
       <y>0</y>
       <width>161</width>
-      <height>601</height>
+      <height>741</height>
      </rect>
     </property>
     <widget class="QWidget" name="layoutWidget">
@@ -759,7 +778,7 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>975</width>
+     <width>1104</width>
      <height>22</height>
     </rect>
    </property>
