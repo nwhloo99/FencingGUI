@@ -140,4 +140,12 @@ def performOcr(folder):
     
     cv2.destroyAllWindows() 
     cap.release()
+    
+    res = []
+    for m in momentum:
+        res.append([m[0] / 30, m[1]])
+    result = list(zip(*res))
+    results_df = pd.DataFrame(res)
+    results_df.to_csv('RobVsHkg/momentum_results.csv', index=False, header=False)
+    
     os.chdir(mycwd)
