@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, QProcess
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog
 from pathlib import Path
 
@@ -21,8 +21,38 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         
+        self.alphapose_process = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        
+    ## Functions to handle results from QProcesses 
+    def alphapose_process_handle_stderr(self):
+        data = self.alphapose_process.readAllStandardError()
+        stderr = bytes(data).decode("utf8")
+        self.ui.label_4.setText(stderr)
+        self.ui.label_4.adjustSize()
+
+    def alphapose_process_handle_stdout(self):
+        data = self.alphapose_process.readAllStandardOutput()
+        stdout = bytes(data).decode("utf8")
+        self.ui.label_4.setText(stdout)
+        self.ui.label_4.adjustSize()
+
+    def alphapose_process_handle_state(self, state):
+        states = {
+            QProcess.NotRunning: 'Not running',
+            QProcess.Starting: 'Starting',
+            QProcess.Running: 'Running',
+        }
+        state_name = states[state]
+        # self.ui.label_4.setText(f"State changed: {state_name}")
+        # self.ui.label_4.adjustSize()
+
+    def alphapose_process_finished(self):
+        self.ui.label_4.setText("Process finished.")
+        self.ui.label_4.adjustSize()
+        self.alphapose_process = None
+        
         
     ## Change QPushButton Checkable status when stackedWidget index changed
     def on_stackedWidget_currentChanged(self, index):
@@ -52,7 +82,7 @@ class MainWindow(QMainWindow):
     ## Function for changing menu page     
     def on_analysis_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(3)
-       
+    
     @pyqtSlot()
     def on_browse_file_btn_1_clicked(self):
         filename, _ = QFileDialog.getOpenFileName(self, "Select a File", "C:")
@@ -82,7 +112,15 @@ class MainWindow(QMainWindow):
         if self.videoChosen:
             path = Path(self.ui.lineEdit_3.text())
             folder = path.parent
-            run_alphapose(folder, path)
+            command = run_alphapose(folder, path)
+            os.chdir("./AlphaPose")
+            self.alphapose_process = QProcess()
+            self.alphapose_process.readyReadStandardOutput.connect(self.alphapose_process_handle_stdout)
+            self.alphapose_process.readyReadStandardError.connect(self.alphapose_process_handle_stderr)
+            self.alphapose_process.stateChanged.connect(self.alphapose_process_handle_state)
+            self.alphapose_process.finished.connect(self.alphapose_process_finished)
+            self.alphapose_process.start(command)
+            os.chdir("..")
         else:
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle("Warning")
@@ -156,8 +194,6 @@ class MainWindow(QMainWindow):
             path = Path(self.ui.lineEdit.text())
             folder = path.parent
             filename = path.name
-            print(folder)
-            print(filename)
             try:
                 maskVideo(folder, filename)
             except:
