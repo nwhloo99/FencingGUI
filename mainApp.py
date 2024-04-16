@@ -17,6 +17,7 @@ from masking import maskVideo
 from ocr import performOcr
 from posetracking import run_alphapose
 from alphapose_processing import get_results
+from analyzedata import analyzeData
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -24,6 +25,9 @@ class MainWindow(QMainWindow):
         
         self.alphapose_process = None
         self.alphapose_read_process = None
+        self.is_epee = False
+        self.is_foil = False
+        self.is_sabre = False
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         
@@ -114,6 +118,23 @@ class MainWindow(QMainWindow):
     ## Function for changing menu page     
     def on_analysis_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(3)
+        self.videoChosen = False
+        self.ui.lineEdit_4.setText("")
+        
+    def on_isEpeeBtn_toggled(self):
+        self.is_epee = True
+        self.is_foil = False
+        self.is_sabre = False
+        
+    def on_isFoilBtn_toggled(self):
+        self.is_epee = False
+        self.is_foil = True
+        self.is_sabre = False
+        
+    def on_isSabreBtn_toggled(self):
+        self.is_epee = False
+        self.is_foil = False
+        self.is_sabre = True
     
     @pyqtSlot()
     def on_browse_file_btn_1_clicked(self):
@@ -138,6 +159,27 @@ class MainWindow(QMainWindow):
             path = Path(filename)
             self.ui.lineEdit_3.setText(str(path))
             self.videoChosen = True
+            
+    @pyqtSlot()
+    def on_browse_file_btn_4_clicked(self):
+        filename, _ = QFileDialog.getOpenFileName(self, "Select a File", "C:")
+        if filename:
+            path = Path(filename)
+            self.ui.lineEdit_4.setText(str(path))
+            self.videoChosen = True
+            
+    @pyqtSlot()
+    def on_performAnalysisButton_clicked(self):
+        if self.videoChosen:
+            path = Path(self.ui.lineEdit_4.text())
+            folder = path.parent
+            analyzeData(folder, is_epee=self.is_epee, is_foil=self.is_foil)
+        else:
+            msg = QtWidgets.QMessageBox()
+            msg.setWindowTitle("Warning")
+            msg.setText("You have not chosen a video")
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            x = msg.exec_()
     
     @pyqtSlot()
     def on_performPoseTrackingButton_clicked(self):
